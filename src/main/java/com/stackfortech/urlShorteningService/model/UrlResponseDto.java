@@ -1,52 +1,17 @@
 package com.stackfortech.urlShorteningService.model;
 
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UrlResponseDto
 {
     private String originalUrl;
     private String shortLink;
-    private LocalDateTime expirationDate;
+    //private LocalDateTime expirationDate;
 
-    public UrlResponseDto(String originalUrl, String shortLink, LocalDateTime expirationDate) {
-        this.originalUrl = originalUrl;
-        this.shortLink = shortLink;
-        this.expirationDate = expirationDate;
-    }
-
-    public UrlResponseDto() {
-    }
-
-    public String getOriginalUrl() {
-        return originalUrl;
-    }
-
-    public void setOriginalUrl(String originalUrl) {
-        this.originalUrl = originalUrl;
-    }
-
-    public String getShortLink() {
-        return shortLink;
-    }
-
-    public void setShortLink(String shortLink) {
-        this.shortLink = shortLink;
-    }
-
-    public LocalDateTime getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(LocalDateTime expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    @Override
-    public String toString() {
-        return "UrlResponseDto{" +
-                "originalUrl='" + originalUrl + '\'' +
-                ", shortLink='" + shortLink + '\'' +
-                ", expirationDate=" + expirationDate +
-                '}';
-    }
 }

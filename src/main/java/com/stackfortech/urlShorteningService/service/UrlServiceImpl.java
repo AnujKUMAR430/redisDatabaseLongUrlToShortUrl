@@ -9,12 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Component
+@Transactional
 public class UrlServiceImpl implements UrlService {
 
     private static final Logger logger = LoggerFactory.getLogger(UrlServiceImpl.class);
@@ -28,10 +30,10 @@ public class UrlServiceImpl implements UrlService {
         {
             String encodedUrl = encodeUrl(urlDto.getUrl());
             Url urlToPersist = new Url();
-            urlToPersist.setCreationDate(LocalDateTime.now());
+            //urlToPersist.setCreationDate(LocalDateTime.now());
             urlToPersist.setOriginalUrl(urlDto.getUrl());
             urlToPersist.setShortLink(encodedUrl);
-            urlToPersist.setExpirationDate(getExpirationDate(urlDto.getExpirationDate(),urlToPersist.getCreationDate()));
+            //urlToPersist.setExpirationDate(getExpirationDate(urlDto.getExpirationDate(),urlToPersist.getCreationDate()));
             Url urlToRet = persistShortLink(urlToPersist);
 
             if(urlToRet != null)
@@ -42,15 +44,15 @@ public class UrlServiceImpl implements UrlService {
         return null;
     }
 
-    private LocalDateTime getExpirationDate(String expirationDate, LocalDateTime creationDate)
-    {
-        if(StringUtils.isBlank(expirationDate))
-        {
-            return creationDate.plusSeconds(60);
-        }
-        LocalDateTime expirationDateToRet = LocalDateTime.parse(expirationDate);
-        return expirationDateToRet;
-    }
+//    private LocalDateTime getExpirationDate(String expirationDate, LocalDateTime creationDate)
+//    {
+//        if(StringUtils.isBlank(expirationDate))
+//        {
+//            return creationDate.plusSeconds(60);
+//        }
+//        LocalDateTime expirationDateToRet = LocalDateTime.parse(expirationDate);
+//        return expirationDateToRet;
+//    }
 
     private String encodeUrl(String url)
     {
@@ -78,5 +80,13 @@ public class UrlServiceImpl implements UrlService {
     public void deleteShortLink(Url url) {
 
         urlRepository.delete(url);
+    }
+
+    @Override
+    public void count(String shortLink) {
+        Url url = urlRepository.findByShortLink(shortLink);
+        url.setCount(url.getCount()+1);
+
+
     }
 }

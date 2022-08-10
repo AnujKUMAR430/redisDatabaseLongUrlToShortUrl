@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @RestController
 public class UrlShorteningController
@@ -30,7 +29,7 @@ public class UrlShorteningController
         {
             UrlResponseDto urlResponseDto = new UrlResponseDto();
             urlResponseDto.setOriginalUrl(urlToRet.getOriginalUrl());
-            urlResponseDto.setExpirationDate(urlToRet.getExpirationDate());
+            //urlResponseDto.setExpirationDate(urlToRet.getExpirationDate());
             urlResponseDto.setShortLink(urlToRet.getShortLink());
             return new ResponseEntity<UrlResponseDto>(urlResponseDto, HttpStatus.OK);
         }
@@ -62,16 +61,44 @@ public class UrlShorteningController
             return new ResponseEntity<UrlErrorResponseDto>(urlErrorResponseDto,HttpStatus.OK);
         }
 
-        if(urlToRet.getExpirationDate().isBefore(LocalDateTime.now()))
+//        if(urlToRet.getExpirationDate().isBefore(LocalDateTime.now()))
+//        {
+//            urlService.deleteShortLink(urlToRet);
+//            UrlErrorResponseDto urlErrorResponseDto = new UrlErrorResponseDto();
+//            urlErrorResponseDto.setError("Url Expired. Please try generating a fresh one.");
+//            urlErrorResponseDto.setStatus("200");
+//            return new ResponseEntity<UrlErrorResponseDto>(urlErrorResponseDto,HttpStatus.OK);
+//        }
+
+        response.sendRedirect(urlToRet.getOriginalUrl());
+        urlService.count(shortLink);
+        return null;
+    }
+
+    @GetMapping("/count/{shortLink}")
+
+    public ResponseEntity<?> noOfCounts(@PathVariable String shortLink) throws IOException {
+
+        if(StringUtils.isEmpty(shortLink))
         {
-            urlService.deleteShortLink(urlToRet);
             UrlErrorResponseDto urlErrorResponseDto = new UrlErrorResponseDto();
-            urlErrorResponseDto.setError("Url Expired. Please try generating a fresh one.");
-            urlErrorResponseDto.setStatus("200");
+            urlErrorResponseDto.setError("Invalid Url");
+            urlErrorResponseDto.setStatus("400");
+            return new ResponseEntity<UrlErrorResponseDto>(urlErrorResponseDto,HttpStatus.OK);
+        }
+        Url urlToRet = urlService.getEncodedUrl(shortLink);
+
+        if(urlToRet == null)
+        {
+            UrlErrorResponseDto urlErrorResponseDto = new UrlErrorResponseDto();
+            urlErrorResponseDto.setError("Url does not exist or it might have expired!");
+            urlErrorResponseDto.setStatus("400");
             return new ResponseEntity<UrlErrorResponseDto>(urlErrorResponseDto,HttpStatus.OK);
         }
 
-        response.sendRedirect(urlToRet.getOriginalUrl());
-        return null;
+        return new ResponseEntity<String>("no.of counts " + urlToRet.getCount(),HttpStatus.OK);
+
     }
+
+
 }

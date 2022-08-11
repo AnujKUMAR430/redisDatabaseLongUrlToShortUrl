@@ -25,14 +25,17 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public Url generateShortLink(UrlDto urlDto) {
+        System.out.println("urlDto = " + urlDto);
 
         if(StringUtils.isNotEmpty(urlDto.getUrl()))
         {
+            System.out.println("urlDto = " + urlDto);
             String encodedUrl = encodeUrl(urlDto.getUrl());
             Url urlToPersist = new Url();
             //urlToPersist.setCreationDate(LocalDateTime.now());
             urlToPersist.setOriginalUrl(urlDto.getUrl());
             urlToPersist.setShortLink(encodedUrl);
+            System.out.println("urlToPersist = " + urlToPersist);
             //urlToPersist.setExpirationDate(getExpirationDate(urlDto.getExpirationDate(),urlToPersist.getCreationDate()));
             Url urlToRet = persistShortLink(urlToPersist);
 

@@ -1,4 +1,4 @@
-package com.stackfortech.urlShorteningService.Controller;
+package com.stackfortech.urlShorteningService.controller;
 
 import com.stackfortech.urlShorteningService.model.Url;
 import com.stackfortech.urlShorteningService.model.UrlDto;

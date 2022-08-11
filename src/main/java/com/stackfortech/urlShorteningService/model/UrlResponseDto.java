@@ -13,5 +13,4 @@ public class UrlResponseDto
     private String originalUrl;
     private String shortLink;
     //private LocalDateTime expirationDate;
-
 }
